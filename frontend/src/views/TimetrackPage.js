@@ -2,25 +2,16 @@ import React, {useEffect, useState} from 'react';
 import dayjs from "dayjs";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 
-import TimetrackTable from '../components/timetracks/TimetrackTable';
+import TimetrackTable from '../components/tables/timetracks/TimetrackTable';
 import IconButton from "@mui/material/IconButton";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import Box from "@mui/material/Box";
-import {ToggleButton, ToggleButtonGroup} from "@mui/material";
 import Title from "../components/typography/common/Title";
-import Badge from "@mui/material/Badge";
 import {useFetchTimeRegistrationsQuery} from "../redux/timeRegistrationSlice";
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    right: -20,
-  },
-}));
-
-const TimetrackView = () => {
+const TimetrackPage = () => {
     const [weekData, setWeekData] = useState({
         currentDate: dayjs(),
         number: dayjs().isoWeek(),
@@ -133,4 +124,4 @@ const TimetrackView = () => {
     )
 }
 
-export default TimetrackView;
+export default TimetrackPage;

@@ -1,13 +1,12 @@
-import {useFetchProjectsQuery} from "../../redux/projectSlice";
 import React, {useEffect, useState} from "react";
-import {FormControl} from "@mui/material";
+import PropTypes from "prop-types";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import PropTypes from "prop-types";
+import {FormControl} from "@mui/material";
 
-const ApiSelect = ({label, name, initialValue, valueProp, displayProp, onChange}) => {
-    const {data, isLoading} = useFetchProjectsQuery();
+const ApiSelect = ({label, name, initialValue, valueProp, displayProp, onChange, fetchQuery, customIsOptionEqualToValue}) => {
+    const {data, isLoading} = fetchQuery();
     const [value, setValue] = useState(null)
 
     useEffect(() => {
@@ -23,6 +22,22 @@ const ApiSelect = ({label, name, initialValue, valueProp, displayProp, onChange}
         onChange({name, value: value ? value[valueProp] : null})
     }
 
+    const getOptionLabel = (option) => {
+        if (typeof displayProp === 'function') {
+            return displayProp(option);
+        } else {
+            return option[displayProp]
+        }
+    }
+
+    const compareOptionToValue = (option, value) => {
+        if (typeof customIsOptionEqualToValue === 'function') {
+            return customIsOptionEqualToValue(option, value)
+        } else {
+            return option[displayProp] === value[displayProp]
+        }
+    }
+
     return (
         <FormControl fullWidth>
             <Autocomplete
@@ -32,13 +47,13 @@ const ApiSelect = ({label, name, initialValue, valueProp, displayProp, onChange}
                 loading={isLoading}
                 options={data || []}
                 value={value}
-                getOptionLabel={(option) => option[displayProp]}
-                isOptionEqualToValue={(option, value) => option[displayProp] === value[displayProp]}
+                getOptionLabel={getOptionLabel}
+                isOptionEqualToValue={compareOptionToValue}
                 noOptionsText='Geen opties gevonden'
                 renderOption={(props, option) => {
                     return (
                         <Box component='li' {...props} key={option[valueProp]}>
-                            {option[displayProp]}
+                            {getOptionLabel(option)}
                         </Box>
                     )
                 }}
@@ -63,8 +78,10 @@ ApiSelect.propTypes = {
     name: PropTypes.string,
     initialValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     valueProp: PropTypes.string,
-    displayProp: PropTypes.string,
-    onChange: PropTypes.func
+    displayProp: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+    onChange: PropTypes.func,
+    fetchQuery: PropTypes.func.isRequired,
+    customIsOptionEqualToValue: PropTypes.func
 }
 
 export default ApiSelect;

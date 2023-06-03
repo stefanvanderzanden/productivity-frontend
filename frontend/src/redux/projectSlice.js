@@ -15,12 +15,54 @@ export const projectsApi = createApi({
                     data: {},
                 }),
                 providesTags: ['Project']
+            }),
+            fetchProject: build.query({
+               query: (id) => ({
+                   url: `v1/projects/${id}/`,
+                   method: 'get',
+               })
+            }),
+            addProject: build.mutation({
+                query: (data) => ({
+                    url: `v1/projects/`,
+                    method: 'post',
+                    data
+                }),
+                invalidatesTags: ['Project']
+            }),
+            updateProject: build.mutation({
+                query: ({id, data}) => {
+                    return {
+                        url: `v1/projects/${id}/`,
+                        method: 'patch',
+                        data
+                    }
+                },
+                invalidatesTags: ['Project']
+            }),
+            deleteProject: build.mutation({
+                query: (id) => ({
+                    url: `v1/projects/${id}/`,
+                    method: 'delete',
+                }),
+                invalidatesTags: ['Project']
+            }),
+            fetchSubProjects: build.query({
+                query: () => ({
+                    url: `v1/sub-projects/`,
+                    method: 'get',
+                }),
+                providesTags: ['SubProject']
             })
         }
     }
 })
 
 export const {
-    useLazyFetchProjectsQuery,
-    useFetchProjectsQuery
+    useFetchProjectsQuery,
+    useLazyFetchProjectQuery,
+    useAddProjectMutation,
+    useUpdateProjectMutation,
+    useDeleteProjectMutation,
+    useFetchSubProjectsQuery
 } = projectsApi

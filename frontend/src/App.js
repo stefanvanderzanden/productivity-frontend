@@ -13,7 +13,7 @@ import {store} from './redux/store';
 import theme from './app/theme';
 import AuthenticatedView from './layouts/PrivateLayout';
 import PrivateRoute from './components/PrivateRoute';
-import LoginView from './views/LoginView';
+import LoginPage from './views/LoginPage';
 import AppProvider from './providers/AppProvider';
 import {ModalProvider} from './providers/ModalProvider';
 
@@ -44,7 +44,7 @@ const App = () => {
                                             </PrivateRoute>
                                         }
                                     />
-                                    <Route path='/login' element={<LoginView/>}/>
+                                    <Route path='/login' element={<LoginPage/>}/>
                                     <Route path='*' element={<Navigate to='/'/>}/>
                                 </Routes>
                             </ModalProvider>

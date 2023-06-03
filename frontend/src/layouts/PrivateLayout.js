@@ -7,9 +7,11 @@ import Container from '@mui/material/Container';
 
 import AppBar from '../components/menus/AppBar';
 import Drawer from '../components/menus/Drawer';
-import TimetrackView from '../views/TimetrackView';
-import DashboardView from '../views/DashboardView';
+import TimetrackPage from '../views/TimetrackPage';
+import DashboardPage from '../views/DashboardPage';
 import SnippetPage from "../views/SnippetPage";
+import ProjectPage from "../views/ProjectPage";
+import TicketPage from "../views/TicketPage";
 
 const PrivateLayout = () => {
     const [open, setOpen] = React.useState(true);
@@ -37,10 +39,10 @@ const PrivateLayout = () => {
                 <Toolbar/>
                 <Container maxWidth={false} sx={{mt: 4, mb: 4}}>
                     <Routes>
-                        <Route element={<DashboardView />} path='/'/>
-                        <Route element={<div>PROJECTS</div>} path='/projects'/>
-                        <Route element={<div>TICKETS</div>} path='/tickets'/>
-                        <Route element={<TimetrackView />} path='/time-registrations'/>
+                        <Route element={<DashboardPage />} path='/'/>
+                        <Route element={<ProjectPage />} path='/projects'/>
+                        <Route element={<TicketPage />} path='/tickets'/>
+                        <Route element={<TimetrackPage />} path='/time-registrations'/>
                         <Route element={<SnippetPage />} path='/snippets' />
                     </Routes>
                 </Container>

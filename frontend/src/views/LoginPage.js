@@ -12,7 +12,7 @@ import {Alert} from "@mui/material";
 import useAuth from "../hooks/useAuth";
 import { login } from "../redux/authSlice";
 
-const LoginView = () => {
+const LoginPage = () => {
     const dispatch = useDispatch();
     const {authenticationError, isAuthenticated} = useAuth()
 
@@ -111,4 +111,4 @@ const LoginView = () => {
     );
 }
 
-export default LoginView;
+export default LoginPage;

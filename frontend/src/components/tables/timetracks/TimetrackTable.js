@@ -1,17 +1,16 @@
 import React, {useContext} from 'react';
+import dayjs from 'dayjs';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {useDeleteTimeRegistrationMutation, useLazyFetchTimeRegistrationQuery} from '../../redux/timeRegistrationSlice';
-import ReactTable from '../table/ReactTable';
-import dayjs from 'dayjs';
-import {ModalContext} from '../../providers/ModalProvider';
+import {useDeleteTimeRegistrationMutation, useLazyFetchTimeRegistrationQuery} from '../../../redux/timeRegistrationSlice';
+import ReactTable from '../ReactTable';
+import {ModalContext} from '../../../providers/ModalProvider';
 
 const TimetrackTable = ({timeRegistrations}) => {
     const {showModal} = useContext(ModalContext);
     const [deleteTimeRegistration, {isLoading: isDeleting}] = useDeleteTimeRegistrationMutation();
     const [trigger, result, lastPromiseInfo] = useLazyFetchTimeRegistrationQuery()
-
     const openModal = (id) => {
         if (id) {
             trigger(id).then((result) => {
@@ -68,16 +67,31 @@ const TimetrackTable = ({timeRegistrations}) => {
                             accessor: 'duration',
                         },
                         {
+                            Header: 'Hoofdproject',
+                            Cell: ({row}) => {
+                                let mainProjectValue;
+                                if (row.original.ticket) {
+                                     mainProjectValue = row.original.ticket.sub_project ? row.original.ticket.sub_project.project.name : 'MISSING TICKET';
+                                } else {
+                                    mainProjectValue = row.original.sub_project ? row.original.sub_project.project.name : 'MISSING SUBPROJECT';
+                                }
+                                return (<div>{mainProjectValue}</div>)
+                            },                        },
+                        {
                             Header: 'Project',
-                            accessor: 'project.name',
+                            Cell: ({row}) => {
+                                let projectValue;
+                                if (row.original.ticket) {
+                                     projectValue = row.original.ticket.sub_project ? row.original.ticket.sub_project.name : 'MISSING TICKET';
+                                } else {
+                                    projectValue = row.original.sub_project ? row.original.sub_project.name : 'MISSING SUBPROJECT';
+                                }
+                                return (<div>{projectValue}</div>)
+                            },
                         },
                         {
                             Header: 'Omschrijving',
                             accessor: 'description',
-                        },
-                        {
-                            Header: 'Referentie',
-                            accessor: 'external_reference',
                         },
                         {
                             Header: 'Acties',
