@@ -22,7 +22,7 @@ export const snippetsApi = createApi({
             //        method: 'get',
             //    })
             // }),
-            addSnippetMutation: build.mutation({
+            addSnippet: build.mutation({
                 query: (data) => ({
                     url: `v1/snippets/`,
                     method: 'post',
@@ -30,15 +30,28 @@ export const snippetsApi = createApi({
                 }),
                 invalidatesTags: ['Snippet']
             }),
-            // updateTimeRegistration: build.mutation({
-            //     query: ({id, data}) => {
-            //         return {
-            //             url: `v1/time-registrations/${id}/`,
-            //             method: 'patch',
-            //             data
+            updateSnippet: build.mutation({
+                query: ({id, data}) => {
+                    return {
+                        url: `v1/snippets/${id}/`,
+                        method: 'patch',
+                        data
+                    }
+                },
+            //     async onQueryStarted({id, data, refetch=false}, { dispatch, queryFulfilled}) {
+            //         console.log('draft: ', data, id)
+            //         const patchResult = dispatch(
+            //             snippetsApi.util.updateQueryData('fetchSnippets', undefined, (draft) => {
+            //                 console.log('draft: ', draft)
+            //                 Object.assign(draft, data)
+            //             })
+            //         )
+            //         try {
+            //             await queryFulfilled
+            //         } catch {
+            //             patchResult.undo()
             //         }
             //     },
-            //     invalidatesTags: ['TimeRegistration']
             // }),
             // deleteTimeRegistration: build.mutation({
             //     query: (id) => ({
@@ -46,7 +59,7 @@ export const snippetsApi = createApi({
             //         method: 'delete',
             //     }),
             //     invalidatesTags: ['TimeRegistration']
-            // })
+            })
         }
     }
 })
@@ -56,7 +69,7 @@ export const {
     // useFetchTimeRegistrationsQuery,
     // useLazyFetchTimeRegistrationQuery,
     useAddSnippetMutation,
-    // useUpdateTimeRegistrationMutation,
+    useUpdateSnippetMutation,
     // useDeleteTimeRegistrationMutation,
 } = snippetsApi;
 

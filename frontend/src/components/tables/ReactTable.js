@@ -1,6 +1,6 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useEffect} from 'react';
 
-import {useTable, useFilters, useGlobalFilter, useAsyncDebounce} from 'react-table'
+import {useTable, useFilters, useGlobalFilter, useAsyncDebounce, useRowSelect} from 'react-table'
 import MaUTable from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import {createTheme} from "@mui/material/styles";
 
 const GlobalTableFilter = ({preGlobalFilteredRows, globalFilter, setGlobalFilter}) => {
     const count = preGlobalFilteredRows.length
@@ -42,7 +43,17 @@ const GlobalTableFilter = ({preGlobalFilteredRows, globalFilter, setGlobalFilter
 }
 
 
-const ReactTable = ({columns, data, onAdd}) => {
+const ReactTable = ({columns, data, onAdd, onRowSelect, selectedItem}) => {
+
+    // const stateReducer = (newState, action) => {
+    //     if (action.type === 'deselectAllRows') {
+    //         return {...newState, selectedRowIds: {}};
+    //     }
+    //
+    //     return newState;
+    // }
+    const selectableRows = onRowSelect && typeof onRowSelect === 'function'
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -52,15 +63,35 @@ const ReactTable = ({columns, data, onAdd}) => {
         state,
         preGlobalFilteredRows,
         setGlobalFilter,
+        toggleAllRowsSelected,
     } = useTable({
             columns,
             data,
+            // stateReducer
         },
-        useGlobalFilter
+        useGlobalFilter,
+        useRowSelect
     );
 
+    // useEffect(() => {
+    //     if (!selectedItem) {
+    //         toggleAllRowsSelected(false);
+    //     }
+    // }, [selectedItem, toggleAllRowsSelected])
+
+    const toggleRow = (selectedRow) => {
+        if (!Object.keys(state.selectedRowIds).includes(selectedRow.id)) {
+            // First unselect all rows when clicking another row
+            toggleAllRowsSelected(false);
+        }
+        selectedRow.toggleRowSelected();
+        if (selectableRows) {
+            onRowSelect(selectedRow.original);
+        }
+    }
+
     return (
-        <>
+        <Box sx={{display: 'flex', width: '100%', flexDirection: 'column'}}>
             <div style={{display: 'flex', justifyContent: 'end', alignContent: 'center', alignItems: 'center'}}>
                 <Box>
                     <GlobalTableFilter
@@ -68,12 +99,14 @@ const ReactTable = ({columns, data, onAdd}) => {
                         globalFilter={state.globalFilter}
                         setGlobalFilter={setGlobalFilter}
                     />
-                    <IconButton
-                        size='large'
-                        onClick={() => onAdd()}
-                    >
-                        <AddBoxIcon fontSize='inherit'/>
-                    </IconButton>
+                    {onAdd && typeof onAdd === 'function' &&
+                        <IconButton
+                            size='large'
+                            onClick={() => onAdd()}
+                        >
+                            <AddBoxIcon fontSize='inherit'/>
+                        </IconButton>
+                    }
                 </Box>
             </div>
             <MaUTable size='small' {...getTableProps()}>
@@ -98,8 +131,27 @@ const ReactTable = ({columns, data, onAdd}) => {
                 <TableBody {...getTableBodyProps()}>
                     {rows.map((row, i) => {
                         prepareRow(row)
+                        const selectableAttributes = {
+                            onClick: () => toggleRow(row),
+                            sx: {
+                                '&:hover': {cursor: 'pointer'},
+                                backgroundColor: (theme) =>
+                                    row.isSelected
+                                        ? theme.palette.secondary.light
+                                        : '',
+                                '> td': {
+                                    color: (theme) =>
+                                        row.isSelected
+                                            ? theme.palette.primary.contrastText
+                                            : '',
+                                }
+                            }
+                        }
                         return (
-                            <TableRow {...row.getRowProps()}>
+                            <TableRow
+                                {...row.getRowProps()}
+                                {...(selectableRows ? {...selectableAttributes} : {})}
+                            >
                                 {row.cells.map(cell => {
                                     return (
                                         <TableCell {...cell.getCellProps([
@@ -117,7 +169,7 @@ const ReactTable = ({columns, data, onAdd}) => {
                     })}
                 </TableBody>
             </MaUTable>
-        </>
+        </Box>
     );
 };
 

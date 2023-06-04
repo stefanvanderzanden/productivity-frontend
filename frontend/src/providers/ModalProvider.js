@@ -1,7 +1,7 @@
 import React, {createContext, useState} from 'react';
 
-import {MODAL_TYPES} from "../components/modal/ModalTypes";
-import BaseModal from "../components/modal/BaseModal";
+import {MODAL_TYPES} from "../components/modals/ModalTypes";
+import BaseModal from "../components/modals/common/BaseModal";
 
 const ModalContext = createContext(null);
 
