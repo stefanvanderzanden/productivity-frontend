@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import ApiSelect from '../ApiSelect';
 import {useFetchTicketTypesQuery} from '../../../redux/ticketSlice';
-import {useFetchProjectsQuery, useFetchSubProjectsQuery} from '../../../redux/projectSlice';
+import {useFetchSubProjectsQuery} from '../../../redux/projectSlice';
 
 const TicketForm = ({formData, errors, handleFormChange}) => {
     return (

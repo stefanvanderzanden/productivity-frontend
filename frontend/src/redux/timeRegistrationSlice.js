@@ -1,5 +1,5 @@
-import {createApi} from '@reduxjs/toolkit/query/react';
-import {axiosBaseQuery} from '../app/API';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { axiosBaseQuery } from '../app/API';
 
 // Define a service using a base URL and expected endpoints
 export const timeRegistrationsApi = createApi({
@@ -14,45 +14,51 @@ export const timeRegistrationsApi = createApi({
                     method: 'get',
                     data: {},
                     params: {
-                        date: startDate
-                    }
+                        date: startDate,
+                    },
                 }),
-                providesTags: ['TimeRegistration']
+                providesTags: ['TimeRegistration'],
             }),
             fetchTimeRegistration: build.query({
-               query: (id) => ({
-                   url: `v1/time-registrations/${id}/`,
-                   method: 'get',
-               })
+                query: (id) => ({
+                    url: `v1/time-registrations/${id}/`,
+                    method: 'get',
+                }),
             }),
             addTimeRegistration: build.mutation({
                 query: (data) => ({
                     url: `v1/time-registrations/`,
                     method: 'post',
-                    data
+                    data,
                 }),
-                invalidatesTags: ['TimeRegistration']
+                invalidatesTags: ['TimeRegistration'],
             }),
             updateTimeRegistration: build.mutation({
-                query: ({id, data}) => {
+                query: ({ id, data }) => {
                     return {
                         url: `v1/time-registrations/${id}/`,
                         method: 'patch',
-                        data
-                    }
+                        data,
+                    };
                 },
-                invalidatesTags: ['TimeRegistration']
+                invalidatesTags: ['TimeRegistration'],
             }),
             deleteTimeRegistration: build.mutation({
                 query: (id) => ({
                     url: `v1/time-registrations/${id}/`,
                     method: 'delete',
                 }),
-                invalidatesTags: ['TimeRegistration']
-            })
-        }
-    }
-})
+                invalidatesTags: ['TimeRegistration'],
+            }),
+            fetchDashboardData: build.query({
+                query: () => ({
+                    url: `v1/time-registrations/dashboard-data/`,
+                    method: 'get',
+                }),
+            }),
+        };
+    },
+});
 
 export const {
     useFetchTimeRegistrationsQuery,
@@ -60,5 +66,5 @@ export const {
     useAddTimeRegistrationMutation,
     useUpdateTimeRegistrationMutation,
     useDeleteTimeRegistrationMutation,
+    useFetchDashboardDataQuery,
 } = timeRegistrationsApi;
-
